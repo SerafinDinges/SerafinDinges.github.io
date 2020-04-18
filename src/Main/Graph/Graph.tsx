@@ -10,6 +10,7 @@ type MyProps = { data: Array<any>, type: String, keys: Array<String> };
 type MyState = {};
 
 class Graph extends React.Component<MyProps, MyState> {
+    colors = ["#E0BBE4","#957DAD","#D291BC","#FEC8D8","#FFDFD3"];
     getDecoration() {
         return <React.Fragment>
 
@@ -25,9 +26,9 @@ class Graph extends React.Component<MyProps, MyState> {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    {this.props.keys.map(key => {
+                    {this.props.keys.map((key, index) => {
                         console.log(key);
-                        return <Line type="monotone" key={key} dataKey={key} />
+                        return <Line type="monotone" key={key} dataKey={key} stroke={this.colors[index]} />
                     })}
                 </LineChart>);
         }
@@ -36,7 +37,7 @@ class Graph extends React.Component<MyProps, MyState> {
         return (
             <div className="Graph">
                 <div className="container">
-                    <ResponsiveContainer aspect={1.5}>
+                    <ResponsiveContainer aspect={1.6}>
                         {this.buildGraph()}
                     </ResponsiveContainer>
                 </div>

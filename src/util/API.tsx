@@ -23,12 +23,24 @@ class API {
             .then(response => {
                 return csv()
                     .fromString(response)
-                    .then((jsonObj) => {
-                        jsonObj = jsonObj.filter(line => {
-                            if(line.iso_code === "DEU") return true;
+                    .then((worldDataRaw) => {
+                        worldDataRaw = worldDataRaw.filter(line => {
+                            if (line.total_cases > 99) return true;
                             return false;
                         })
-                        return jsonObj;
+                        let totalCases = {};
+                        worldDataRaw.forEach(line => {
+                            if (line.iso_code === "DEU" || line.iso_code === "GBR") {
+                                if (!totalCases[line.date]) totalCases[line.date] = { date: line.date };
+                                totalCases[line.date][line.iso_code + "cases"] = line.total_cases;
+                                totalCases[line.date][line.iso_code + "deaths"] = line.total_deaths;
+                            }
+                        });
+                        let arr = [] as any;
+                        Object.keys(totalCases).forEach((key) => {
+                            arr.push(totalCases[key]);
+                        });
+                        return arr;
                     });
             });
 

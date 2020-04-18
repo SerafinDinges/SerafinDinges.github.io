@@ -39,7 +39,7 @@ class Main extends React.Component<MyProps, MyState> {
                 <p>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo nisi inventore voluptates accusantium, quam beatae obcaecati ex ab quasi? Nobis earum nulla impedit hic quae, corporis eaque voluptate qui culpa.
                 </p>
-                <Graph data={this.state.worldData} keys={["total_cases"]} type="LineChart"/>
+                <Graph data={this.state.worldData} keys={["DEUcases","DEUdeaths","GBRcases","GBRdeaths"]} type="LineChart"/>
             </div>
         );
     }
