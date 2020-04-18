@@ -30,25 +30,24 @@ const data = [
     },
 ];
 
+type MyProps = { data: Array<any> };
+type MyState = {};
 
-class Graph extends React.Component {
+class Graph extends React.Component<MyProps, MyState> {
     render() {
         return (
             <div className="Graph">
                 <ResponsiveContainer aspect={1.6}>
                     <LineChart
-                        data={data}
-                        margin={{
-                            top: 5, right: 30, left: 20, bottom: 5,
-                        }}
+                        data={this.props.data}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="date" />
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                        <Line type="monotone" dataKey="de" stroke="#8884d8" activeDot={{ r: 8 }} />
+                        {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
                     </LineChart>
                 </ResponsiveContainer>
             </div>
