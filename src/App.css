@@ -11,3 +11,7 @@
 .App > div {
   padding: 20px 0;
 }
+
+*, div, p, span {
+  box-sizing: border-box;
+}
