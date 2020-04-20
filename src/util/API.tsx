@@ -5,11 +5,13 @@ const csv = require('csvtojson/v2');
 
 class API {
     tabletop: Tabletop;
+    worldData: any;
     constructor() {
         this.tabletop = Tabletop.init({
             key: '1sAXPISlxdaxPIUAkua6Dxdd5DeWlUQ3fzx6Q9aGzfxY',
             simpleSheet: false
         });
+        this.worldData = false;
     }
     async getSheet(name) {
         return this.tabletop.then((data, tabletop: Tabletop) => {
@@ -17,32 +19,36 @@ class API {
             return entries;
         });
     }
-    async getWorldData() {
-        return fetch('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv')
-            .then(response => response.text())
-            .then(response => {
-                return csv()
-                    .fromString(response)
-                    .then((worldDataRaw) => {
-                        worldDataRaw = worldDataRaw.filter(line => {
-                            if (line.total_cases > 99) return true;
-                            return false;
-                        })
-                        let totalCases = {};
-                        worldDataRaw.forEach(line => {
-                            if (line.iso_code === "DEU" || line.iso_code === "GBR") {
-                                if (!totalCases[line.date]) totalCases[line.date] = { date: line.date };
-                                totalCases[line.date][line.iso_code + "cases"] = line.total_cases;
-                                totalCases[line.date][line.iso_code + "deaths"] = line.total_deaths;
-                            }
-                        });
-                        let arr = [] as any;
-                        Object.keys(totalCases).forEach((key) => {
-                            arr.push(totalCases[key]);
-                        });
-                        return arr;
+    async getCVD19CasesByCountry(countries: Array<String>) { // ISO CODES: "GBR", "DEU", "USA"
+        // iso_code,location,date,total_cases,new_cases,total_deaths,new_deaths,total_cases_per_million,new_cases_per_million,total_deaths_per_million,new_deaths_per_million,total_tests,new_tests,total_tests_per_thousand,new_tests_per_thousand,tests_units
+        if (!this.worldData)
+            this.worldData = fetch('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv')
+                .then(response => response.text());
+        return this.worldData.then(response => {
+            return csv()
+                .fromString(response)
+                .then((worldDataRaw) => {
+                    worldDataRaw = worldDataRaw.filter(line => {
+                        if (line.total_cases > 999) return true; // only return data where total cases
+                        return false;
+                    })
+                    let totalCases = {};
+                    worldDataRaw.forEach(line => {
+                        if (countries.includes(line.iso_code)) {
+                            if (!totalCases[line.date]) totalCases[line.date] = { date: line.date };
+                            totalCases[line.date][line.iso_code + "_cases"] = line.total_cases / 1000; // -> total cases in magnitudes of 1000
+                            totalCases[line.date][line.iso_code + "_deaths"] = (line.total_deaths / 1); // -> total deaths in magnitudes of 100
+                            let prettyDate = new Date(line.date);
+                            totalCases[line.date].prettyDate = `${prettyDate.getDay()}. ${prettyDate.getMonth()}`;
+                        }
                     });
-            });
+                    let arr = [] as any;
+                    Object.keys(totalCases).forEach((key) => {
+                        arr.push(totalCases[key]);
+                    });
+                    return arr;
+                });
+        });
 
     }
 }

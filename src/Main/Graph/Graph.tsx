@@ -6,11 +6,15 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
-type MyProps = { data: Array<any>, type: String, keys: Array<String> };
+type MyProps = { dataWrapper: {
+    data: Array<any>,
+    labels: any
+}, type: String };
 type MyState = {};
 
 class Graph extends React.Component<MyProps, MyState> {
-    colors = ["#E0BBE4","#957DAD","#D291BC","#FEC8D8","#FFDFD3"];
+    // colors = ["#E0BBE4","#957DAD","#D291BC","#FEC8D8","#FFDFD3"];
+    colors = ["#998AD3","#E494D3","#CDF1AF","#87DCC0","#88BBE4"];
     getDecoration() {
         return <React.Fragment>
 
@@ -20,14 +24,13 @@ class Graph extends React.Component<MyProps, MyState> {
         if (this.props.type === "LineChart") {
             return (
                 <LineChart
-                    data={this.props.data}>
-                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                    <XAxis dataKey="date" />
+                    data={this.props.dataWrapper.data}>
+                    <CartesianGrid strokeDasharray="5 5" stroke="#eee" />
+                    <XAxis dataKey={this.props.dataWrapper.labels.xAxis} />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    {this.props.keys.map((key, index) => {
-                        console.log(key);
+                    {this.props.dataWrapper.labels.dataKeys.map((key, index) => {
                         return <Line type="monotone" key={key} dataKey={key} stroke={this.colors[index]} />
                     })}
                 </LineChart>);
