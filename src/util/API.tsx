@@ -35,11 +35,19 @@ class API {
                     let totalCases = {};
                     worldDataRaw.forEach(line => {
                         if (countries.includes(line.iso_code)) {
-                            if (!totalCases[line.date]) totalCases[line.date] = { date: line.date };
-                            totalCases[line.date][line.iso_code + "_cases"] = line.total_cases / 1000; // -> total cases in magnitudes of 1000
-                            totalCases[line.date][line.iso_code + "_deaths"] = (line.total_deaths / 1); // -> total deaths in magnitudes of 100
+                            if (!totalCases[line.date]) {
+                                totalCases[line.date] = { date: line.date };
+                            }
+                            totalCases[line.date][line.iso_code + "_total_cases"] = line.total_cases / 1000; // -> total cases in magnitudes of 1000
+                            totalCases[line.date][line.iso_code + "_total_deaths"] = (line.total_deaths / 1); // -> total deaths in magnitudes of 100
+                            totalCases[line.date][line.iso_code + "_new_deaths"] = (line.new_deaths / 1); // -> total deaths in magnitudes of 100
+                            totalCases[line.date][line.iso_code + "_new_cases"] = (line.new_deaths / 1); // -> total deaths in magnitudes of 100
+                            totalCases[line.date][line.iso_code + "_total_cases_per_million"] = (line.total_cases_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
+                            totalCases[line.date][line.iso_code + "_new_cases_per_million"] = (line.new_cases_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
+                            totalCases[line.date][line.iso_code + "_total_deaths_per_million"] = (line.total_deaths_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
+                            totalCases[line.date][line.iso_code + "_new_deaths_per_million"] = (line.new_deaths_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
                             let prettyDate = new Date(line.date);
-                            totalCases[line.date].prettyDate = `${prettyDate.getDay()}. ${prettyDate.getMonth()}`;
+                            totalCases[line.date].prettyDate = `${prettyDate.getMonth()+1}-${prettyDate.getDate()}`;
                         }
                     });
                     let arr = [] as any;

@@ -7,6 +7,7 @@ type MyProps = {};
 type MyState = {
     DataProvider: DataProvider,
     compareCountries: any,
+    showDataSets: any,
     sheetData: Array<any>, customDeaths: any, ukDeaths: {
         data: Array<any>,
         labels: any
@@ -29,8 +30,12 @@ class Main extends React.Component<MyProps, MyState> {
         },
         {
             selected: false, value: 'AUT', label: 'Austria'
+        },
+        {
+            selected: false, value: 'ITA', label: 'Italy'
         }
     ];
+    displayOptions = ["total_deaths", "new_deaths", "total_cases", "new_cases","total_cases_per_million","new_cases_per_million","total_deaths_per_million","new_deaths_per_million"];
     constructor(props) {
         super(props)
         this.state = {
@@ -38,7 +43,8 @@ class Main extends React.Component<MyProps, MyState> {
             ukDeaths: { data: [], labels: { dataKeys: [] } },
             customDeaths: { data: [], labels: { dataKeys: [] } },
             DataProvider: new DataProvider(),
-            compareCountries: []
+            compareCountries: [],
+            showDataSets: []
         }
     }
     componentDidMount() {
@@ -56,13 +62,22 @@ class Main extends React.Component<MyProps, MyState> {
         // });
     }
     processState() {
-        this.state.DataProvider.getCasesByCountry(this.state.compareCountries).then((data) => {
-            console.log(data);
-            
-            this.setState({
-                customDeaths: data
-            })
-        });
+        if (this.state.showDataSets.length > 0 && this.state.compareCountries.length > 0)
+            this.state.DataProvider.getCasesByCountry(this.state.compareCountries).then((data) => {
+                let wrapper = data;
+                wrapper.labels.dataKeys = [];
+                this.state.showDataSets.forEach(dataKey => {
+                    this.state.compareCountries.forEach(country => {
+                        wrapper.labels.dataKeys.push(country + "_" + dataKey);
+                    })
+                });
+                wrapper.labels.dataKeys.sort();
+                console.log(wrapper);
+
+                this.setState({
+                    customDeaths: wrapper
+                })
+            });
     }
     handleChange(e) {
         let countries = this.state.compareCountries;
@@ -75,21 +90,36 @@ class Main extends React.Component<MyProps, MyState> {
             compareCountries: countries
         }, () => this.processState());
     }
+    handleChange2(e) {
+        let dataSets = this.state.showDataSets;
+        if (e.target.checked)
+            dataSets = dataSets.concat([e.target.value]);
+        else if (dataSets.indexOf(e.target.value) > -1)
+            dataSets.splice(dataSets.indexOf(e.target.value), 1);
+        this.setState({
+            showDataSets: dataSets
+        }, () => this.processState());
+    }
     render() {
         return (
             <div className="Main">
                 <p>
                     Compare different countries with each other.
                 </p>
-                {this.countryOptions.map(el => {
-                    return <label key={el.value}><input onChange={this.handleChange.bind(this)} type="checkbox" value={el.value} />{el.label}</label>;
-                })}
+                <p>
+                    <strong>Choose countries</strong>
+                    {this.countryOptions.map(el => {
+                        return <label key={el.value}><input onChange={this.handleChange.bind(this)} type="checkbox" value={el.value} />{el.label}</label>;
+                    })}
+                </p>
+                <p>
+                    <strong>Choose data</strong>
+                    {this.displayOptions.map(el => {
+                        return <label key={el}><input onChange={this.handleChange2.bind(this)} type="checkbox" value={el} />{el}</label>;
+                    })}
+                </p>
                 <Graph dataWrapper={this.state.customDeaths} type="LineChart" />
                 {/* <Graph data={this.state.sheetData} keys={["uk_total_sum","uk_respiratory_sum"]} type="LineChart"/> */}
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo nisi inventore voluptates accusantium, quam beatae obcaecati ex ab quasi? Nobis earum nulla impedit hic quae, corporis eaque voluptate qui culpa.
-                </p>
-                <Graph dataWrapper={this.state.ukDeaths} type="LineChart" />
             </div>
         );
     }

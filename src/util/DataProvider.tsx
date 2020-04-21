@@ -13,14 +13,14 @@ class DataProvider {
             return firstDate.getTime() - secondDate.getTime();
         });
         wrapper.data = cvd19deaths;
-        let keys: Array<String> = [];
-        countries.forEach(country => {
-            // keys.push(country + "_cases");
-            keys.push(country + "_deaths");
-        });
+        // let keys: Array<String> = [];
+        // countries.forEach(country => {
+        //     // keys.push(country + "_cases");
+        //     keys.push(country + "_new_deaths");
+        // });
         wrapper.labels = {
-            xAxis: "date",
-            dataKeys: keys
+            xAxis: "prettyDate",
+            // dataKeys: keys
         };
         return wrapper;
     }
