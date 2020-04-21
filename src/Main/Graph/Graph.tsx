@@ -30,10 +30,10 @@ class Graph extends React.Component<MyProps, MyState> {
         countries: { "GBR": 0, "USA": 1, "DEU": 2, "AUT": 3, "ITA": 4, "JPN": 5 },
         dataSets: {}
     }
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate() {
         let dataSetHelper = {};
         let counter = 0;
-        nextProps.dataWrapper.labels.dataKeys.forEach(key => {
+        this.props.dataWrapper.labels.dataKeys.forEach(key => {
             if (!dataSetHelper[key.substring(3)]) {
                 dataSetHelper[key.substring(3)] = counter;
                 counter++;
