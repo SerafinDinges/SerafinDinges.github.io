@@ -8,6 +8,10 @@ class DataProvider {
     async getCasesByCountry(countries: Array<String>) {
         let cvd19deaths = await this.API.getCVD19CasesByCountry(countries);
         let wrapper: any = {};
+        cvd19deaths = cvd19deaths.sort((first, second) => {
+            let firstDate = new Date(first.date), secondDate = new Date(second.date);
+            return firstDate.getTime() - secondDate.getTime();
+        });
         wrapper.data = cvd19deaths;
         let keys: Array<String> = [];
         countries.forEach(country => {

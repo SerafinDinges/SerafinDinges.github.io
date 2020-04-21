@@ -45,7 +45,7 @@ class Main extends React.Component<MyProps, MyState> {
         this.state.DataProvider.getUKDeaths().then((data) => {
             this.setState({
                 ukDeaths: data
-            })
+            });
         });
         // .getSheet("regular_flu_deaths").then((data) => {
         //     console.log("sheetdata", data);
@@ -55,20 +55,25 @@ class Main extends React.Component<MyProps, MyState> {
         //     })
         // });
     }
-    handleChange(e) {
-        console.log(e.target);
-        let countries = this.state.compareCountries.concat(e.target.value);
-
-        this.setState({
-            compareCountries: countries
-        });
-
-        this.state.DataProvider.getCasesByCountry(countries).then((data) => {
+    processState() {
+        this.state.DataProvider.getCasesByCountry(this.state.compareCountries).then((data) => {
             console.log(data);
+            
             this.setState({
                 customDeaths: data
             })
         });
+    }
+    handleChange(e) {
+        let countries = this.state.compareCountries;
+        if (e.target.checked)
+            countries = countries.concat([e.target.value]);
+        else if (countries.indexOf(e.target.value) > -1)
+            countries.splice(countries.indexOf(e.target.value), 1);
+
+        this.setState({
+            compareCountries: countries
+        }, () => this.processState());
     }
     render() {
         return (
@@ -76,15 +81,9 @@ class Main extends React.Component<MyProps, MyState> {
                 <p>
                     Compare different countries with each other.
                 </p>
-                <select value={this.state.compareCountries}
-                    onChange={this.handleChange.bind(this)}
-                    multiple={true}
-                >
-                    <option value="">Choose</option>
-                    {this.countryOptions.map(el => {
-                        return <option key={el.value} value={el.value}>{el.label}</option>
-                    })}
-                </select>
+                {this.countryOptions.map(el => {
+                    return <label key={el.value}><input onChange={this.handleChange.bind(this)} type="checkbox" value={el.value} />{el.label}</label>;
+                })}
                 <Graph dataWrapper={this.state.customDeaths} type="LineChart" />
                 {/* <Graph data={this.state.sheetData} keys={["uk_total_sum","uk_respiratory_sum"]} type="LineChart"/> */}
                 <p>
