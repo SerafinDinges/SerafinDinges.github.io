@@ -29,6 +29,7 @@ class DataProvider {
     async getComparisonData(comparisons: Array<string>, wrapper: any) {
         let mainData = await this.API.getSheet("main_data");
         console.log(comparisons, wrapper, mainData);
+        let comparedData: Array<any> = [];
         mainData.forEach(element => {
             let date = new Date(element.date);
             date.setFullYear(2020); // pretend this data is from 2020 for comparison in similar time
@@ -46,8 +47,10 @@ class DataProvider {
                 comparisons.forEach(comparison => {
                     wrapper.data[dataIndex][comparison] = element[comparison];
                 });
+                comparedData.push(wrapper.data[dataIndex]);
             }
         });
+        wrapper.data = comparedData;
         wrapper.labels.comparisons = comparisons;
 
         // let wrapper: any = {};

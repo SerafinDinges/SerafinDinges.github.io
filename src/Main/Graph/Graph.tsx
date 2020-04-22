@@ -75,7 +75,7 @@ class Graph extends React.Component<MyProps, MyState> {
                     <Tooltip formatter={this.getToolTip} />
                     <Legend formatter={getMetaKey} />
                     {this.props.dataWrapper.labels.comparisons ? this.props.dataWrapper.labels.comparisons.map((key) => {
-                        return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} fill={this.getColor(key)} />
+                        return <Area type="monotone" key={key} dataKey={key} fill='#8884d8' stroke='#8884d8' />
                     }) : ""}
                     {this.props.dataWrapper.labels.dataKeys.map((key) => {
                         return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} />
