@@ -35,7 +35,7 @@ class Main extends React.Component<MyProps, MyState> {
             selected: false, value: 'ITA', label: 'Italy'
         }
     ];
-    displayOptions = ["total_deaths", "new_deaths", "total_cases", "new_cases","total_cases_per_million","new_cases_per_million","total_deaths_per_million","new_deaths_per_million"];
+    displayOptions = ["total_deaths", "new_deaths", "total_cases", "new_cases", "total_cases_per_million", "new_cases_per_million", "total_deaths_per_million", "new_deaths_per_million"];
     constructor(props) {
         super(props)
         this.state = {
@@ -103,21 +103,23 @@ class Main extends React.Component<MyProps, MyState> {
     render() {
         return (
             <div className="Main">
-                <p>
-                    Compare different countries with each other.
+                <div className="text">
+                    <p>
+                        Compare different countries with each other.
                 </p>
-                <p>
-                    <strong>Choose countries</strong>
-                    {this.countryOptions.map(el => {
-                        return <label key={el.value}><input onChange={this.handleChange.bind(this)} type="checkbox" value={el.value} />{el.label}</label>;
-                    })}
-                </p>
-                <p>
-                    <strong>Choose data</strong>
-                    {this.displayOptions.map(el => {
-                        return <label key={el}><input onChange={this.handleChange2.bind(this)} type="checkbox" value={el} />{el}</label>;
-                    })}
-                </p>
+                    <p>
+                        <strong>Choose countries</strong>
+                        {this.countryOptions.map(el => {
+                            return <label key={el.value}><input onChange={this.handleChange.bind(this)} type="checkbox" value={el.value} />{el.label}</label>;
+                        })}
+                    </p>
+                    <p>
+                        <strong>Choose data</strong>
+                        {this.displayOptions.map(el => {
+                            return <label key={el}><input onChange={this.handleChange2.bind(this)} type="checkbox" value={el} />{el}</label>;
+                        })}
+                    </p>
+                </div>
                 <Graph dataWrapper={this.state.customDeaths} type="LineChart" />
                 {/* <Graph data={this.state.sheetData} keys={["uk_total_sum","uk_respiratory_sum"]} type="LineChart"/> */}
             </div>
