@@ -2,6 +2,7 @@ import React from 'react';
 import './Main.css';
 import Graph from "./Graph/Graph";
 import DataProvider from "../util/DataProvider";
+import { dictionary } from "../util/Dictionary";
 
 type MyProps = {};
 type MyState = {
@@ -12,27 +13,6 @@ type MyState = {
 };
 
 class Main extends React.Component<MyProps, MyState> {
-    countryOptions = [
-        {
-            selected: false, value: 'USA', label: 'USA'
-        },
-        {
-            selected: false, value: 'GBR', label: 'United Kingdom'
-        },
-        {
-            selected: false, value: 'DEU', label: 'Germany'
-        },
-        {
-            selected: false, value: 'JPN', label: 'Japan'
-        },
-        {
-            selected: false, value: 'AUT', label: 'Austria'
-        },
-        {
-            selected: false, value: 'ITA', label: 'Italy'
-        }
-    ];
-    displayOptions = ["total_deaths", "new_deaths", "total_cases", "new_cases", "total_cases_per_million", "new_cases_per_million", "total_deaths_per_million", "new_deaths_per_million"];
     constructor(props) {
         super(props)
         this.state = {
@@ -82,14 +62,14 @@ class Main extends React.Component<MyProps, MyState> {
                 </p>
                     <p>
                         <strong>Choose countries</strong>
-                        {this.countryOptions.map(el => {
-                            return <label key={el.value}><input onChange={this.handleChange.bind(this)} type="checkbox" value={el.value} />{el.label}</label>;
+                        {Object.keys(dictionary.countries).map((key) => {
+                            return <label key={key}><input onChange={this.handleChange.bind(this)} type="checkbox" value={key} />{dictionary.countries[key]}</label>;
                         })}
                     </p>
                     <p>
                         <strong>Choose data</strong>
-                        {this.displayOptions.map(el => {
-                            return <label key={el}><input onChange={this.handleChange2.bind(this)} type="checkbox" value={el} />{el}</label>;
+                        {Object.keys(dictionary.dataSets).map(key => {
+                            return <label key={key}><input onChange={this.handleChange2.bind(this)} type="checkbox" value={key} />{dictionary.dataSets[key]}</label>;
                         })}
                     </p>
                 </div>

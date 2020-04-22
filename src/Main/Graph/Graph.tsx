@@ -60,7 +60,7 @@ class Graph extends React.Component<MyProps, MyState> {
         return this.colors[countryIndex][dataSetIndex];
     }
     getToolTip(value, name) {
-        return [value.toFixed(0), this.props.dataWrapper.metaData[name]];
+        return [parseInt(value).toFixed(0), this.props.dataWrapper.metaData[name]];
     }
     getLegend(value, entry) {
         return this.props.dataWrapper.metaData[value];
