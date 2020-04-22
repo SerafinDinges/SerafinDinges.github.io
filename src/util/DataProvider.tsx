@@ -2,10 +2,41 @@ import API from './API'
 
 class DataProvider {
     API: API;
+    translations: any;
     constructor() {
         this.API = new API();
+        this.translations = {
+            countries: {
+                "DEU": "Germany",
+                "GBR": "United Kingdom",
+                "AUT": "Austria",
+                "USA": "USA",
+                "JPN": "Japan",
+                "ITA": "Italy",
+            },
+            dataSets: {
+                "total_deaths": "Total deaths",
+                "new_deaths": "New deaths",
+                "total_cases": "Total cases (in thousands)",
+                "new_cases": "New cases",
+                "total_cases_per_million": "Total cases (per million inhabitants)",
+                "new_cases_per_million": "New cases (per million inhabitants)",
+                "total_deaths_per_million": "Total deaths (per million inhabitants)",
+                "new_deaths_per_million": "New deaths (per million inhabitants)"
+            }
+        };
     }
-    async getCasesByCountry(countries: Array<String>) {
+    getMetaData(keys) {
+        let meta = {};
+        keys.forEach((key) => {
+            let country = key.substring(0, 3);
+            let dataSet = key.substring(4);
+            console.log(country, dataSet);
+            meta[key] = `${this.translations.countries[country]}: ${this.translations.dataSets[dataSet]}`;
+        });
+        return meta;
+    }
+    async getCasesByCountryAndDataset(countries: Array<String>, dataSets: Array<String>) {
         let cvd19deaths = await this.API.getCVD19CasesByCountry(countries);
         let wrapper: any = {};
         cvd19deaths = cvd19deaths.sort((first, second) => {
@@ -13,15 +44,17 @@ class DataProvider {
             return firstDate.getTime() - secondDate.getTime();
         });
         wrapper.data = cvd19deaths;
-        // let keys: Array<String> = [];
-        // countries.forEach(country => {
-        //     // keys.push(country + "_cases");
-        //     keys.push(country + "_new_deaths");
-        // });
         wrapper.labels = {
-            xAxis: "prettyDate",
-            // dataKeys: keys
+            xAxis: "prettyDate"
         };
+        wrapper.labels.dataKeys = [];
+        dataSets.forEach(dataKey => {
+            countries.forEach(country => {
+                wrapper.labels.dataKeys.push(country + "_" + dataKey);
+            })
+        });
+        wrapper.labels.dataKeys.sort();
+        wrapper.metaData = this.getMetaData(wrapper.labels.dataKeys);
         return wrapper;
     }
     async getUKDeaths() {

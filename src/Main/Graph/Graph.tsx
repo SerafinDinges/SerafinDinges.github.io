@@ -3,13 +3,14 @@ import React from 'react';
 import './Graph.css';
 
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+    ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
 type MyProps = {
     dataWrapper: {
         data: Array<any>,
-        labels: any
+        labels: any,
+        metaData: any
     }, type: String
 };
 type MyState = {
@@ -56,31 +57,28 @@ class Graph extends React.Component<MyProps, MyState> {
     getColor(key: String) {
         let countryIndex = this.state.colorKey.countries[key.substring(0, 3)];
         let dataSetIndex = this.state.colorKey.dataSets[key.substring(3)];
-        console.log(key, this.colors[countryIndex][dataSetIndex], this.state.colorKey);
-        console.log(key.substring(3), this.state.colorKey.dataSets[key.substring(3)]);
-
-
         return this.colors[countryIndex][dataSetIndex];
     }
-    getDecoration() {
-        return <React.Fragment>
-
-        </React.Fragment>;
+    getToolTip(value, name) {
+        return [value.toFixed(0), this.props.dataWrapper.metaData[name]];
+    }
+    getLegend(value, entry) {
+        return this.props.dataWrapper.metaData[value];
     }
     buildGraph() {
         if (this.props.type === "LineChart") {
             return (
-                <LineChart
+                <ComposedChart
                     data={this.props.dataWrapper.data}>
                     <CartesianGrid strokeDasharray="5 5" stroke="#eee" />
                     <XAxis dataKey={this.props.dataWrapper.labels.xAxis} />
                     <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    {this.props.dataWrapper.labels.dataKeys.map((key, index) => {
+                    <Tooltip formatter={this.getToolTip.bind(this)} />
+                    <Legend formatter={this.getLegend.bind(this)} />
+                    {this.props.dataWrapper.labels.dataKeys.map((key) => {
                         return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} />
                     })}
-                </LineChart>);
+                </ComposedChart>);
         }
     }
     render() {

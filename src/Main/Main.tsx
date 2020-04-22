@@ -8,10 +8,7 @@ type MyState = {
     DataProvider: DataProvider,
     compareCountries: any,
     showDataSets: any,
-    sheetData: Array<any>, customDeaths: any, ukDeaths: {
-        data: Array<any>,
-        labels: any
-    }
+    sheetData: Array<any>, customDeaths: any
 };
 
 class Main extends React.Component<MyProps, MyState> {
@@ -40,40 +37,16 @@ class Main extends React.Component<MyProps, MyState> {
         super(props)
         this.state = {
             sheetData: [],
-            ukDeaths: { data: [], labels: { dataKeys: [] } },
             customDeaths: { data: [], labels: { dataKeys: [] } },
             DataProvider: new DataProvider(),
             compareCountries: [],
             showDataSets: []
         }
     }
-    componentDidMount() {
-        this.state.DataProvider.getUKDeaths().then((data) => {
-            this.setState({
-                ukDeaths: data
-            });
-        });
-        // .getSheet("regular_flu_deaths").then((data) => {
-        //     console.log("sheetdata", data);
-
-        //     this.setState({
-        //         sheetData: data
-        //     })
-        // });
-    }
     processState() {
         if (this.state.showDataSets.length > 0 && this.state.compareCountries.length > 0)
-            this.state.DataProvider.getCasesByCountry(this.state.compareCountries).then((data) => {
-                let wrapper = data;
-                wrapper.labels.dataKeys = [];
-                this.state.showDataSets.forEach(dataKey => {
-                    this.state.compareCountries.forEach(country => {
-                        wrapper.labels.dataKeys.push(country + "_" + dataKey);
-                    })
-                });
-                wrapper.labels.dataKeys.sort();
+            this.state.DataProvider.getCasesByCountryAndDataset(this.state.compareCountries, this.state.showDataSets).then((wrapper) => {
                 console.log(wrapper);
-
                 this.setState({
                     customDeaths: wrapper
                 })
