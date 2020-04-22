@@ -87,7 +87,7 @@ class Graph extends React.Component<MyProps, MyState> {
         return (
             <div className="Graph">
                 <div className="container">
-                    <ResponsiveContainer aspect={1.6}>
+                    <ResponsiveContainer aspect={1.9}>
                         {this.buildGraph()}
                     </ResponsiveContainer>
                 </div>
