@@ -27,6 +27,7 @@ class DataProvider {
     }
     async getComparisonData(comparisons: Array<String>, wrapper: any) {
         console.log(comparisons, wrapper);
+        let respiratoryDeaths = await this.API.getSheet("regular_flu_deaths");
 
         // let wrapper: any = {};
         // let respiratoryDeaths = await this.API.getSheet("regular_flu_deaths");
