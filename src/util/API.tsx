@@ -28,10 +28,10 @@ class API {
             return csv()
                 .fromString(response)
                 .then((worldDataRaw) => {
-                    worldDataRaw = worldDataRaw.filter(line => {
-                        if (line.total_cases > 999) return true; // only return data where total cases
-                        return false;
-                    })
+                    // worldDataRaw = worldDataRaw.filter(line => {
+                    //     if (line.total_cases > 999) return true; // only return data where total cases
+                    //     return false;
+                    // })
                     let totalCases = {};
                     worldDataRaw.forEach(line => {
                         if (countries.includes(line.iso_code)) {
@@ -40,6 +40,7 @@ class API {
                             if (!totalCases[lineDateKey]) {
                                 totalCases[lineDateKey] = { date: lineDateKey };
                             }
+                            totalCases[lineDateKey].weekday = lineDate.getDay();
                             totalCases[lineDateKey][line.iso_code + "_total_cases"] = line.total_cases / 1000; // -> total cases in magnitudes of 1000
                             totalCases[lineDateKey][line.iso_code + "_total_deaths"] = (line.total_deaths / 1); // -> total deaths in magnitudes of 1
                             totalCases[lineDateKey][line.iso_code + "_new_deaths"] = (line.new_deaths / 1); // -> total deaths in magnitudes of 1
@@ -55,7 +56,37 @@ class API {
                     Object.keys(totalCases).forEach((key) => {
                         arr.push(totalCases[key]);
                     });
-                    return arr;
+                    console.log("arar", arr.slice());
+
+                    for (let index = 0; index < arr.length; index++) { // delete data until first friday
+                        if (arr[index].weekday === 6) {
+                            arr.splice(0, index);
+                            break;
+                        }
+                    }
+                    let metaArray: Array<Array<any>> = [];
+                    while (arr.length) {
+                        metaArray.push(arr.splice(0, 7));
+                    }
+                    console.log(metaArray);
+                    let finalArray = [] as any;
+                    metaArray.forEach(oneWeek => {
+                        finalArray.push(oneWeek.reduce((newDay, sum) => {
+                            Object.keys(newDay).forEach(key => {
+                                if (key.includes("new")) {
+                                    sum[key] += newDay[key];
+                                } else {
+                                    sum[key] = newDay[key];
+                                }
+                            });
+                            return sum;
+                        }));
+                    });
+                    console.log("fin", finalArray);
+
+
+
+                    return finalArray;
                 });
         });
 
