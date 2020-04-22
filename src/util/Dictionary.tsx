@@ -7,6 +7,7 @@ export const dictionary = {
         "USA": "USA",
         "JPN": "Japan",
         "ITA": "Italy",
+        "KOR": "South Korea",
     },
     dataSets: {
         "total_deaths": "Total deaths",
