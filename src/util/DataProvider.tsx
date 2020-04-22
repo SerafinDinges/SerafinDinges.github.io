@@ -1,17 +1,9 @@
 import API from './API'
-import getMetaKey from './Dictionary';
 
 class DataProvider {
     API: API;
     constructor() {
         this.API = new API();
-    }
-    getMetaData(keys) {
-        let meta = {};
-        keys.forEach((key) => {
-            meta[key] = getMetaKey(key);
-        });
-        return meta;
     }
     async getCasesByCountryAndDataset(countries: Array<String>, dataSets: Array<String>) {
         let cvd19deaths = await this.API.getCVD19CasesByCountry(countries);
@@ -31,36 +23,36 @@ class DataProvider {
             })
         });
         wrapper.labels.dataKeys.sort();
-        wrapper.metaData = this.getMetaData(wrapper.labels.dataKeys);
         return wrapper;
     }
-    async getUKDeaths() {
-        let wrapper: any = {};
-        let cvd19deaths = await this.API.getCVD19CasesByCountry(["GBR"]);
-        let respiratoryDeaths = await this.API.getSheet("regular_flu_deaths");
-        let helperObjectRespiratoryDeaths: any = {};
-        respiratoryDeaths.forEach(element => {
-            let date = new Date(element.date);
-            helperObjectRespiratoryDeaths[date.getDay() + "-" + date.getMonth()] = element;
-        });
+    async getComparisonData(comparisons: Array<String>, wrapper: any) {
+        console.log(comparisons, wrapper);
 
-        let aggregatedData = cvd19deaths.map((element) => {
-            let date = new Date(element.date);
-            let time = date.getMonth() + "-" + date.getDay();
+        // let wrapper: any = {};
+        // let respiratoryDeaths = await this.API.getSheet("regular_flu_deaths");
+        // let helperObjectRespiratoryDeaths: any = {};
+        // respiratoryDeaths.forEach(element => {
+        //     let date = new Date(element.date);
+        //     helperObjectRespiratoryDeaths[date.getDay() + "-" + date.getMonth()] = element;
+        // });
 
-            if (helperObjectRespiratoryDeaths[time]) {
-                element.uk_total_deaths = helperObjectRespiratoryDeaths[time].uk_total_sum;
-                element.uk_respiratory_deaths = helperObjectRespiratoryDeaths[time].uk_respiratory_sum;
-            }
-            return element;
-        });
-        console.log(aggregatedData);
+        // let aggregatedData = cvd19deaths.map((element) => {
+        //     let date = new Date(element.date);
+        //     let time = date.getMonth() + "-" + date.getDay();
 
-        wrapper.data = aggregatedData;
-        wrapper.labels = {
-            xAxis: "date",
-            dataKeys: ["GBRcases", "GBRdeaths", "uk_total_deaths", "uk_respiratory_deaths"]
-        };
+        //     if (helperObjectRespiratoryDeaths[time]) {
+        //         element.uk_total_deaths = helperObjectRespiratoryDeaths[time].uk_total_sum;
+        //         element.uk_respiratory_deaths = helperObjectRespiratoryDeaths[time].uk_respiratory_sum;
+        //     }
+        //     return element;
+        // });
+        // console.log(aggregatedData);
+
+        // wrapper.data = aggregatedData;
+        // wrapper.labels = {
+        //     xAxis: "date",
+        //     dataKeys: ["GBRcases", "GBRdeaths", "uk_total_deaths", "uk_respiratory_deaths"]
+        // };
         return wrapper;
     }
 }

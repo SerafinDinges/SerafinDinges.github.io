@@ -10,14 +10,17 @@ export const dictionary = {
         "KOR": "South Korea",
     },
     dataSets: {
-        "total_deaths": "Total deaths",
+        "new_cases": "New cases",
         "new_deaths": "New deaths",
         "total_cases": "Total cases (in thousands)",
-        "new_cases": "New cases",
-        "total_cases_per_million": "Total cases (per million inhabitants)",
-        "new_cases_per_million": "New cases (per million inhabitants)",
-        "total_deaths_per_million": "Total deaths (per million inhabitants)",
-        "new_deaths_per_million": "New deaths (per million inhabitants)"
+        "total_deaths": "Total deaths",
+        // "total_cases_per_million": "Total cases (per million inhabitants)",
+        // "new_cases_per_million": "New cases (per million inhabitants)",
+        // "total_deaths_per_million": "Total deaths (per million inhabitants)",
+        // "new_deaths_per_million": "New deaths (per million inhabitants)"
+    },
+    comparisons: {
+        "GBR_new_respiratory_deaths": "Average respiratory deaths in the UK (pre cvd19)"
     }
 };
 function getMetaKey(key: string) {

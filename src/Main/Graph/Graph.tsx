@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './Graph.css';
+import getMetaKey from '../../util/Dictionary';
 
 import {
     ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -9,8 +10,7 @@ import {
 type MyProps = {
     dataWrapper: {
         data: Array<any>,
-        labels: any,
-        metaData: any
+        labels: any
     }, type: String
 };
 type MyState = {
@@ -62,10 +62,7 @@ class Graph extends React.Component<MyProps, MyState> {
         else return this.colors[0][Math.floor(Math.random() * 5)];
     }
     getToolTip(value, name) {
-        return [parseInt(value).toFixed(0), this.props.dataWrapper.metaData[name]];
-    }
-    getLegend(value, entry) {
-        return this.props.dataWrapper.metaData[value];
+        return [parseInt(value).toFixed(0), getMetaKey(name)];
     }
     buildGraph() {
         if (this.props.type === "LineChart") {
@@ -75,8 +72,8 @@ class Graph extends React.Component<MyProps, MyState> {
                     <CartesianGrid strokeDasharray="5 5" stroke="#eee" />
                     <XAxis dataKey={this.props.dataWrapper.labels.xAxis} />
                     <YAxis />
-                    <Tooltip formatter={this.getToolTip.bind(this)} />
-                    <Legend formatter={this.getLegend.bind(this)} />
+                    <Tooltip formatter={this.getToolTip} />
+                    <Legend formatter={getMetaKey} />
                     {this.props.dataWrapper.labels.dataKeys.map((key) => {
                         return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} />
                     })}

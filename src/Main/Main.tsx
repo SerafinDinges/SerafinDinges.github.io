@@ -6,31 +6,42 @@ import { dictionary } from "../util/Dictionary";
 
 type MyProps = {};
 type MyState = {
-    DataProvider: DataProvider,
     compareCountries: any,
     showDataSets: any,
-    sheetData: Array<any>, customDeaths: any
+    showComparisons: any,
+    sheetData: Array<any>, customData: any
 };
 
 class Main extends React.Component<MyProps, MyState> {
+    DataProvider: DataProvider;
     constructor(props) {
         super(props)
         this.state = {
             sheetData: [],
-            customDeaths: { data: [], labels: { dataKeys: [] } },
-            DataProvider: new DataProvider(),
+            customData: { data: [], labels: { dataKeys: [] } },
             compareCountries: [],
-            showDataSets: []
+            showDataSets: [],
+            showComparisons: []
         }
+        this.DataProvider = new DataProvider();
     }
     processState() {
-        if (this.state.showDataSets.length > 0 && this.state.compareCountries.length > 0)
-            this.state.DataProvider.getCasesByCountryAndDataset(this.state.compareCountries, this.state.showDataSets).then((wrapper) => {
+        if (this.state.showDataSets.length > 0 && this.state.compareCountries.length > 0) {
+            this.DataProvider.getCasesByCountryAndDataset(this.state.compareCountries, this.state.showDataSets).then((wrapper) => {
                 console.log(wrapper);
-                this.setState({
-                    customDeaths: wrapper
-                })
+                if (this.state.showComparisons.length > 0) {
+                    this.DataProvider.getComparisonData(this.state.showComparisons, wrapper).then((wrapper) => {
+                        this.setState({
+                            customData: wrapper
+                        })
+                    });
+                }
+                else
+                    this.setState({
+                        customData: wrapper
+                    })
             });
+        }
     }
     handleChange(e) {
         let countries = this.state.compareCountries;
@@ -53,6 +64,16 @@ class Main extends React.Component<MyProps, MyState> {
             showDataSets: dataSets
         }, () => this.processState());
     }
+    handleChange3(e) {
+        let compareTo = this.state.showComparisons;
+        if (e.target.checked)
+            compareTo = compareTo.concat([e.target.value]);
+        else if (compareTo.indexOf(e.target.value) > -1)
+            compareTo.splice(compareTo.indexOf(e.target.value), 1);
+        this.setState({
+            showComparisons: compareTo
+        }, () => this.processState());
+    }
     render() {
         return (
             <div className="Main">
@@ -72,8 +93,14 @@ class Main extends React.Component<MyProps, MyState> {
                             return <label key={key}><input onChange={this.handleChange2.bind(this)} type="checkbox" value={key} />{dictionary.dataSets[key]}</label>;
                         })}
                     </p>
+                    <p>
+                        <strong>Compare to</strong>
+                        {Object.keys(dictionary.comparisons).map(key => {
+                            return <label key={key}><input onChange={this.handleChange3.bind(this)} type="checkbox" value={key} />{dictionary.comparisons[key]}</label>;
+                        })}
+                    </p>
                 </div>
-                <Graph dataWrapper={this.state.customDeaths} type="LineChart" />
+                <Graph dataWrapper={this.state.customData} type="LineChart" />
                 {/* <Graph data={this.state.sheetData} keys={["uk_total_sum","uk_respiratory_sum"]} type="LineChart"/> */}
             </div>
         );
