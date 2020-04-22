@@ -23,11 +23,32 @@ class DataProvider {
             })
         });
         wrapper.labels.dataKeys.sort();
+        wrapper.labels.comparisons = [];
         return wrapper;
     }
-    async getComparisonData(comparisons: Array<String>, wrapper: any) {
-        console.log(comparisons, wrapper);
-        let respiratoryDeaths = await this.API.getSheet("regular_flu_deaths");
+    async getComparisonData(comparisons: Array<string>, wrapper: any) {
+        let mainData = await this.API.getSheet("main_data");
+        console.log(comparisons, wrapper, mainData);
+        mainData.forEach(element => {
+            let date = new Date(element.date);
+            date.setFullYear(2020); // pretend this data is from 2020 for comparison in similar time
+            let dateKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+            // console.log(dateKey, element);
+            let dataIndex: number = -1;
+            wrapper.data.forEach((value, index) => {
+                if (value.date === dateKey) {
+                    dataIndex = index;
+                    return;
+                }
+            });
+
+            if (dataIndex > -1) {
+                comparisons.forEach(comparison => {
+                    wrapper.data[dataIndex][comparison] = element[comparison];
+                });
+            }
+        });
+        wrapper.labels.comparisons = comparisons;
 
         // let wrapper: any = {};
         // let respiratoryDeaths = await this.API.getSheet("regular_flu_deaths");

@@ -36,10 +36,11 @@ class Main extends React.Component<MyProps, MyState> {
                         })
                     });
                 }
-                else
+                else {
                     this.setState({
                         customData: wrapper
                     })
+                }
             });
         }
     }

@@ -4,7 +4,7 @@ import './Graph.css';
 import getMetaKey from '../../util/Dictionary';
 
 import {
-    ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+    ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area
 } from 'recharts';
 
 type MyProps = {
@@ -74,6 +74,9 @@ class Graph extends React.Component<MyProps, MyState> {
                     <YAxis />
                     <Tooltip formatter={this.getToolTip} />
                     <Legend formatter={getMetaKey} />
+                    {this.props.dataWrapper.labels.comparisons ? this.props.dataWrapper.labels.comparisons.map((key) => {
+                        return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} fill={this.getColor(key)} />
+                    }) : ""}
                     {this.props.dataWrapper.labels.dataKeys.map((key) => {
                         return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} />
                     })}
