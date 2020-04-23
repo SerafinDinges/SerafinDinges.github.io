@@ -28,7 +28,7 @@ class Main extends React.Component<MyProps, MyState> {
     processState() {
         if (this.state.showDataSets.length > 0 && this.state.compareCountries.length > 0) {
             this.DataProvider.getCasesByCountryAndDataset(this.state.compareCountries, this.state.showDataSets).then((wrapper) => {
-                console.log(wrapper);
+                console.log("before comparison", wrapper, wrapper.data.slice());
                 if (this.state.showComparisons.length > 0) {
                     this.DataProvider.getComparisonData(this.state.showComparisons, wrapper).then((wrapper) => {
                         this.setState({
@@ -95,7 +95,7 @@ class Main extends React.Component<MyProps, MyState> {
                         })}
                     </p>
                     <p>
-                        <strong>Compare to</strong>
+                        <strong>Compare to</strong> (will switch to weekly data)
                         {Object.keys(dictionary.comparisons).map(key => {
                             return <label key={key}><input onChange={this.handleChange3.bind(this)} type="checkbox" value={key} />{dictionary.comparisons[key]}</label>;
                         })}

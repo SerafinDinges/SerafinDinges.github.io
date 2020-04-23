@@ -26,17 +26,46 @@ class DataProvider {
         wrapper.labels.comparisons = [];
         return wrapper;
     }
+    transformToWeekly(arr) {
+        console.log("transform to weekly", arr.slice());
+
+        for (let index = 0; index < arr.length; index++) { // delete data until first friday
+            if (arr[index].weekday === 1) {
+                arr.splice(0, index - 1);
+                break;
+            }
+        }
+        let metaArray: Array<Array<any>> = [];
+        while (arr.length) {
+            metaArray.push(arr.splice(0, 7));
+        }
+        console.log(metaArray);
+        let finalArray = [] as any;
+        metaArray.forEach(oneWeek => {
+            finalArray.push(oneWeek.reduce((newDay, sum) => {
+                Object.keys(newDay).forEach(key => {
+                    if (key.includes("new")) {
+                        sum[key] += parseInt(newDay[key]);
+                    }
+                });
+                return sum;
+            }));
+        });
+        console.log("fin", finalArray);
+        return finalArray;
+    }
     async getComparisonData(comparisons: Array<string>, wrapper: any) {
         let mainData = await this.API.getSheet("main_data");
         console.log(comparisons, wrapper, mainData);
         let comparedData: Array<any> = [];
+        let baseData = this.transformToWeekly(wrapper.data);
         mainData.forEach(element => {
             let date = new Date(element.date);
             date.setFullYear(2020); // pretend this data is from 2020 for comparison in similar time
             let dateKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-            // console.log(dateKey, element);
+            console.log(dateKey, element);
             let dataIndex: number = -1;
-            wrapper.data.forEach((value, index) => {
+            baseData.forEach((value, index) => {
                 if (value.date === dateKey) {
                     dataIndex = index;
                     return;
@@ -45,11 +74,13 @@ class DataProvider {
 
             if (dataIndex > -1) {
                 comparisons.forEach(comparison => {
-                    wrapper.data[dataIndex][comparison] = element[comparison];
+                    baseData[dataIndex][comparison] = element[comparison];
                 });
-                comparedData.push(wrapper.data[dataIndex]);
+                comparedData.push(baseData[dataIndex]);
             }
         });
+        console.log("FINAL COMPARED", comparedData);
+
         wrapper.data = comparedData;
         wrapper.labels.comparisons = comparisons;
 

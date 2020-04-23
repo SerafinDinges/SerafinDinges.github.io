@@ -56,37 +56,7 @@ class API {
                     Object.keys(totalCases).forEach((key) => {
                         arr.push(totalCases[key]);
                     });
-                    console.log("arar", arr.slice());
-
-                    for (let index = 0; index < arr.length; index++) { // delete data until first friday
-                        if (arr[index].weekday === 6) {
-                            arr.splice(0, index);
-                            break;
-                        }
-                    }
-                    let metaArray: Array<Array<any>> = [];
-                    while (arr.length) {
-                        metaArray.push(arr.splice(0, 7));
-                    }
-                    console.log(metaArray);
-                    let finalArray = [] as any;
-                    metaArray.forEach(oneWeek => {
-                        finalArray.push(oneWeek.reduce((newDay, sum) => {
-                            Object.keys(newDay).forEach(key => {
-                                if (key.includes("new")) {
-                                    sum[key] += newDay[key];
-                                } else {
-                                    sum[key] = newDay[key];
-                                }
-                            });
-                            return sum;
-                        }));
-                    });
-                    console.log("fin", finalArray);
-
-
-
-                    return finalArray;
+                    return arr;
                 });
         });
 
