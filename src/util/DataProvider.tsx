@@ -1,4 +1,5 @@
 import API from './API'
+const moment = require('moment');
 
 class DataProvider {
     API: API;
@@ -26,20 +27,20 @@ class DataProvider {
         wrapper.labels.comparisons = [];
         return wrapper;
     }
-    transformToWeekly(arr) {
+    reduceDataSetToInterval(arr, intervalStartDay, intervalDuration) {
         console.log("transform to weekly", arr.slice());
-
-        for (let index = 0; index < arr.length; index++) { // delete data until first friday
-            if (arr[index].weekday === 1) {
-                arr.splice(0, index - 1);
+        for (let index = 0; index < arr.length; index++) { // delete data until first incrementation
+            if (moment(arr[index].date).dayOfYear() === (intervalStartDay - intervalDuration + 1)) { // start at the beginning of first duration of interval
+                console.log(moment(arr[index].date).dayOfYear(), intervalStartDay, intervalDuration);
+                arr.splice(0, index);
                 break;
             }
         }
         let metaArray: Array<Array<any>> = [];
         while (arr.length) {
-            metaArray.push(arr.splice(0, 7));
+            metaArray.push(arr.splice(0, intervalDuration));
         }
-        console.log(metaArray);
+        // console.log(metaArray);
         let finalArray = [] as any;
         metaArray.forEach(oneWeek => {
             finalArray.push(oneWeek.reduce((newDay, sum) => {
@@ -58,15 +59,17 @@ class DataProvider {
         let mainData = await this.API.getSheet("main_data");
         console.log(comparisons, wrapper, mainData);
         let comparedData: Array<any> = [];
-        let baseData = this.transformToWeekly(wrapper.data);
+
+        // get interval of comparison data
+        let intervalStart = moment(mainData[0].date).dayOfYear();
+        let intervalDuration = moment(mainData[1].date).dayOfYear() - intervalStart;
+
+        let baseData = this.reduceDataSetToInterval(wrapper.data, intervalStart, intervalDuration);
         mainData.forEach(element => {
-            let date = new Date(element.date);
-            date.setFullYear(2020); // pretend this data is from 2020 for comparison in similar time
-            let dateKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-            console.log(dateKey, element);
+            let date = moment(element.date);
             let dataIndex: number = -1;
             baseData.forEach((value, index) => {
-                if (value.date === dateKey) {
+                if (moment(value.date).dayOfYear() === date.dayOfYear()) {
                     dataIndex = index;
                     return;
                 }

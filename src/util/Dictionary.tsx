@@ -21,13 +21,19 @@ export const dictionary = {
         // "new_deaths_per_million": "New deaths (per million inhabitants)"
     },
     comparisons: {
-        "GBR_new_respiratory_deaths": "Average respiratory deaths in the UK (pre cvd19)"
+        "new_respiratory_deaths": "Average new weekly respiratory deaths in the UK (last five years)",
+        // "respiratory_sum": "Total of average weekly respiratory deaths in the UK (pre cvd19)",
+        "new_overall_deaths": "Average new overall deaths in the UK (last five years)",
+        // "overall_deaths_sum": "Sum of average new overall deaths in the UK (last X years)"
     }
 };
 function getMetaKey(key: string) {
     let country = key.substring(0, 3);
     let dataSet = key.substring(4);
-    return `${dictionary.countries[country]}: ${dictionary.dataSets[dataSet]}`
+    let dataSetKey = false;
+    if (dictionary.dataSets[dataSet]) dataSetKey = dictionary.dataSets[dataSet];
+    else dataSetKey = dictionary.comparisons[dataSet];
+    return `${dictionary.countries[country]}: ${dataSetKey}`
 }
 
 function getDataSetLabel(key: string) {

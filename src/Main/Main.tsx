@@ -95,9 +95,9 @@ class Main extends React.Component<MyProps, MyState> {
                         })}
                     </p>
                     <p>
-                        <strong>Compare to</strong> (will switch to weekly data)
+                        <strong>Compare to all respiratory disease deaths (<a href="https://en.wikipedia.org/wiki/ICD-10_Chapter_X:_Diseases_of_the_respiratory_system">ICD-10 J00-J99</a>)</strong> (will switch to weekly data)
                         {Object.keys(dictionary.comparisons).map(key => {
-                            return <label key={key}><input onChange={this.handleChange3.bind(this)} type="checkbox" value={key} />{dictionary.comparisons[key]}</label>;
+                            return <label key={key}><input onChange={this.handleChange3.bind(this)} type="checkbox" value={"GBR_" + key} />{dictionary.comparisons[key]}</label>;
                         })}
                     </p>
                 </div>
