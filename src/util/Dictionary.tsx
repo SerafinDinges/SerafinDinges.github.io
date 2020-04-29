@@ -1,7 +1,7 @@
 export { getMetaKey as default, getDataSetLabel };
 export const dictionary = {
     countries: {
-        "GBR": "United Kingdom",
+        "GBR": "UK",
         "DEU": "Germany",
         "AUT": "Austria",
         "USA": "USA",
@@ -31,7 +31,7 @@ function getMetaKey(key: string) {
     let dataSetKey = false;
     if (dictionary.comparisons[key]) dataSetKey = dictionary.comparisons[key];
     else dataSetKey = dictionary.dataSets[dataSet];
-    return `${country} - ${dataSetKey}`
+    return `${dictionary.countries[country]} - ${dataSetKey}`
 }
 
 function getDataSetLabel(key: string) {
