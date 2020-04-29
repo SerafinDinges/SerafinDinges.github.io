@@ -27,7 +27,8 @@ class Graph extends React.Component<MyProps, MyState> {
         ["#FF4DF2", "#E83A85", "#BF3AE8", "#9E40FF", "#7440FF"], // purples
         ["#FF8E59", "#E89751", "#FFC265", "#E8BB51", "#FFDE59"], // oranges
         ["#FFEA56", "#E8C443", "#E8E543", "#FFC54A", "#CAFF4A"], // yellows
-        ["#E0BBE4", "#957DAD", "#D291BC", "#FEC8D8", "#FFDFD3"] //unused
+        ["#E0BBE4", "#957DAD", "#D291BC", "#FEC8D8", "#FFDFD3"], //unused
+        ["#DEDE65", "#9BE386", "#5FE0B6", "#5AD4DE", "#95C1ED", "#D2A7DC", "#F591B2", "#F8897F"] // comparison
     ]
     constructor(props) {
         super(props);
@@ -47,10 +48,21 @@ class Graph extends React.Component<MyProps, MyState> {
                 counter++;
             }
         });
+        let comparisons = {};
+        if (props.dataWrapper.labels.comparisons) {
+            counter = 0;
+            props.dataWrapper.labels.comparisons.forEach(key => {
+                if (!comparisons[key]) {
+                    comparisons[key] = counter;
+                    counter++;
+                }
+            });
+        }
         return ({
             colorKey: {
                 countries: state.colorKey.countries,
-                dataSets: dataSetHelper
+                dataSets: dataSetHelper,
+                comparisons: comparisons
             }
         });
     }
@@ -60,6 +72,11 @@ class Graph extends React.Component<MyProps, MyState> {
         let dataSetIndex = this.state.colorKey.dataSets[key.substring(3)];
         if (this.colors[countryIndex] && this.colors[countryIndex][dataSetIndex]) return this.colors[countryIndex][dataSetIndex];
         else return this.colors[0][Math.floor(Math.random() * 5)];
+    }
+    getAreaColor(key: string) {
+        console.log(this.state.colorKey, key);
+
+        return this.colors[8][this.state.colorKey.comparisons[key]];
     }
     getToolTip(value, name) {
         return [parseInt(value).toFixed(0), getMetaKey(name)];
@@ -75,7 +92,7 @@ class Graph extends React.Component<MyProps, MyState> {
                     <Tooltip formatter={this.getToolTip} />
                     <Legend formatter={getMetaKey} />
                     {this.props.dataWrapper.labels.comparisons ? this.props.dataWrapper.labels.comparisons.map((key) => {
-                        return <Area type="monotone" key={key} dataKey={key} fill='#8884d8' stroke='#8884d8' />
+                        return <Area type="monotone" key={key} dataKey={key} fill={this.getAreaColor(key)} stroke={this.getAreaColor(key)} />
                     }) : ""}
                     {this.props.dataWrapper.labels.dataKeys.map((key) => {
                         return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} />

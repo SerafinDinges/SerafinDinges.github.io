@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
@@ -23,7 +23,7 @@ export default function CustomSelect(props) {
         props.onChange(result, props.stateKey);
     }
     return (
-        <Select
+        <CreatableSelect
             closeMenuOnSelect={false}
             components={animatedComponents}
             isMulti
