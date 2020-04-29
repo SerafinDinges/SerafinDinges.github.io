@@ -3,6 +3,7 @@ import './Main.css';
 import Graph from "./Graph/Graph";
 import DataProvider from "../util/DataProvider";
 import { dictionary } from "../util/Dictionary";
+import CustomSelect from "../SharedComponents/CustomSelect";
 
 type MyProps = {};
 type MyState = {
@@ -44,36 +45,13 @@ class Main extends React.Component<MyProps, MyState> {
             });
         }
     }
-    handleChange(e) {
-        let countries = this.state.compareCountries;
-        if (e.target.checked)
-            countries = countries.concat([e.target.value]);
-        else if (countries.indexOf(e.target.value) > -1)
-            countries.splice(countries.indexOf(e.target.value), 1);
+    handleChange(result, stateKey) {
+        console.log(result, stateKey);
 
-        this.setState({
-            compareCountries: countries
-        }, () => this.processState());
-    }
-    handleChange2(e) {
-        let dataSets = this.state.showDataSets;
-        if (e.target.checked)
-            dataSets = dataSets.concat([e.target.value]);
-        else if (dataSets.indexOf(e.target.value) > -1)
-            dataSets.splice(dataSets.indexOf(e.target.value), 1);
-        this.setState({
-            showDataSets: dataSets
-        }, () => this.processState());
-    }
-    handleChange3(e) {
-        let compareTo = this.state.showComparisons;
-        if (e.target.checked)
-            compareTo = compareTo.concat([e.target.value]);
-        else if (compareTo.indexOf(e.target.value) > -1)
-            compareTo.splice(compareTo.indexOf(e.target.value), 1);
-        this.setState({
-            showComparisons: compareTo
-        }, () => this.processState());
+        let newState = {}
+        newState[stateKey] = result;
+
+        this.setState(newState, () => this.processState());
     }
     render() {
         return (
@@ -81,28 +59,16 @@ class Main extends React.Component<MyProps, MyState> {
                 <div className="text">
                     <p>
                         Compare different countries with each other.
-                </p>
-                    <p>
-                        <strong>Choose countries</strong>
-                        {Object.keys(dictionary.countries).map((key) => {
-                            return <label key={key}><input onChange={this.handleChange.bind(this)} type="checkbox" value={key} />{dictionary.countries[key]}</label>;
-                        })}
                     </p>
-                    <p>
-                        <strong>Choose data</strong>
-                        {Object.keys(dictionary.dataSets).map(key => {
-                            return <label key={key}><input onChange={this.handleChange2.bind(this)} type="checkbox" value={key} />{dictionary.dataSets[key]}</label>;
-                        })}
-                    </p>
-                    <p>
-                        <strong>Compare to all respiratory disease deaths (<a href="https://en.wikipedia.org/wiki/ICD-10_Chapter_X:_Diseases_of_the_respiratory_system">ICD-10 J00-J99</a>)</strong> (will switch to weekly data)
-                        {Object.keys(dictionary.comparisons).map(key => {
-                            return <label key={key}><input onChange={this.handleChange3.bind(this)} type="checkbox" value={"GBR_" + key} />{dictionary.comparisons[key]}</label>;
-                        })}
-                    </p>
+                    <h3>Choose countries</h3>
+                    <CustomSelect options={dictionary.countries} stateKey="compareCountries" onChange={this.handleChange.bind(this)} />
+                    <h3>Choose data</h3>
+                    <CustomSelect options={dictionary.dataSets} stateKey="showDataSets" onChange={this.handleChange.bind(this)} />
+                    <h3>Compare to other data</h3>
+                    <CustomSelect options={dictionary.comparisons} stateKey="showComparisons" onChange={this.handleChange.bind(this)} />
+                    <p className="footnote">*refers to all types of respiratory deaths, see <a href="https://en.wikipedia.org/wiki/ICD-10_Chapter_X:_Diseases_of_the_respiratory_system">ICD-10 J00-J99</a></p>
                 </div>
                 <Graph dataWrapper={this.state.customData} type="LineChart" />
-                {/* <Graph data={this.state.sheetData} keys={["uk_total_sum","uk_respiratory_sum"]} type="LineChart"/> */}
             </div>
         );
     }

@@ -11,8 +11,8 @@ export const dictionary = {
         "SWE": "Sweden",
     },
     dataSets: {
-        "new_cases": "cases",
-        "new_deaths": "deaths",
+        "new_cases": "New cases",
+        "new_deaths": "New deaths",
         "total_cases": "Total cases",
         "total_deaths": "Total deaths",
         // "total_cases_per_million": "Total cases (per million inhabitants)",
@@ -21,19 +21,17 @@ export const dictionary = {
         // "new_deaths_per_million": "New deaths (per million inhabitants)"
     },
     comparisons: {
-        "new_respiratory_deaths": "Average new weekly respiratory deaths in the UK (last five years)",
-        // "respiratory_sum": "Total of average weekly respiratory deaths in the UK (pre cvd19)",
-        "new_overall_deaths": "Average new overall deaths in the UK (last five years)",
-        // "overall_deaths_sum": "Sum of average new overall deaths in the UK (last X years)"
+        "GBR_new_respiratory_deaths": "Weekly new respiratory deaths* in England and Wales (five year average)",
+        "GBR_new_overall_deaths": "Weekly new overall deaths in England and Wales (five year average)",
     }
 };
 function getMetaKey(key: string) {
     let country = key.substring(0, 3);
     let dataSet = key.substring(4);
     let dataSetKey = false;
-    if (dictionary.dataSets[dataSet]) dataSetKey = dictionary.dataSets[dataSet];
-    else dataSetKey = dictionary.comparisons[dataSet];
-    return `${dictionary.countries[country]}: ${dataSetKey}`
+    if (dictionary.comparisons[key]) dataSetKey = dictionary.comparisons[key];
+    else dataSetKey = dictionary.dataSets[dataSet];
+    return `${country} - ${dataSetKey}`
 }
 
 function getDataSetLabel(key: string) {

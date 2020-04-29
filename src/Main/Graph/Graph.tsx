@@ -80,6 +80,7 @@ class Graph extends React.Component<MyProps, MyState> {
                     {this.props.dataWrapper.labels.dataKeys.map((key) => {
                         return <Line type="monotone" key={key} dataKey={key} stroke={this.getColor(key)} />
                     })}
+
                 </ComposedChart>);
         }
     }
