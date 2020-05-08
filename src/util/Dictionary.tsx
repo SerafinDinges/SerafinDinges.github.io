@@ -28,10 +28,15 @@ export const dictionary = {
 function getMetaKey(key: string) {
     let country = key.substring(0, 3);
     let dataSet = key.substring(4);
+    let perMillion = "";
+    if (dataSet.includes("_per_million")) {
+        dataSet = dataSet.replace("_per_million", "");
+        perMillion = " (per million)"
+    }
     let dataSetKey = false;
     if (dictionary.comparisons[key]) dataSetKey = dictionary.comparisons[key];
     else dataSetKey = dictionary.dataSets[dataSet];
-    return `${dictionary.countries[country]} - ${dataSetKey}`
+    return `${dictionary.countries[country]} - ${dataSetKey}${perMillion}`
 }
 
 function getDataSetLabel(key: string) {

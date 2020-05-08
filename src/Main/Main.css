@@ -7,7 +7,12 @@ h3 {
     margin-top: 5px;
     padding: 0;
     font-size: 12px;
+    
 }
+
+h3 label {
+        font-weight: normal;
+    }
 
 .footnote {
     font-size: 10px;

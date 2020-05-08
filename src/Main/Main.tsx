@@ -10,7 +10,8 @@ type MyState = {
     compareCountries: any,
     showDataSets: any,
     showComparisons: any,
-    sheetData: Array<any>, customData: any
+    sheetData: Array<any>, customData: any,
+    perMillion: boolean
 };
 
 class Main extends React.Component<MyProps, MyState> {
@@ -22,14 +23,25 @@ class Main extends React.Component<MyProps, MyState> {
             customData: { data: [], labels: { dataKeys: [] } },
             compareCountries: ["GBR"],
             showDataSets: ["new_deaths"],
-            showComparisons: []
+            showComparisons: [],
+            perMillion: false
         }
         this.DataProvider = new DataProvider();
         this.processState();
     }
     processState() {
         if (this.state.showDataSets.length > 0 && this.state.compareCountries.length > 0) {
-            this.DataProvider.getCasesByCountryAndDataset(this.state.compareCountries, this.state.showDataSets).then((wrapper) => {
+            let dataSets = this.state.showDataSets.slice();
+            console.log("dataSets", dataSets.slice());
+
+            if (this.state.perMillion) {
+                dataSets.forEach((dataSet, key) => {
+                    dataSets[key] += "_per_million";
+                });
+            }
+
+            console.log("dataSets", dataSets);
+            this.DataProvider.getCasesByCountryAndDataset(this.state.compareCountries.slice(), dataSets).then((wrapper) => {
                 console.log("before comparison", wrapper, wrapper.data.slice());
                 if (this.state.showComparisons.length > 0) {
                     this.DataProvider.getComparisonData(this.state.showComparisons, wrapper).then((wrapper) => {
@@ -63,7 +75,15 @@ class Main extends React.Component<MyProps, MyState> {
                     </p>
                     <h3>Choose countries</h3>
                     <CustomSelect options={dictionary.countries} stateKey="compareCountries" value={this.state.compareCountries[0]} onChange={this.handleChange.bind(this)} />
-                    <h3>Choose data</h3>
+                    <h3>
+                        Choose data <label htmlFor="checkbox_per_million">
+                            <input type="checkbox" id="checkbox_per_million" onChange={(e) => {
+                                this.handleChange.bind(this)(e.target.checked, "perMillion");
+                            }} />
+                        per million
+                        </label>
+                    </h3>
+
                     <CustomSelect options={dictionary.dataSets} stateKey="showDataSets" value={this.state.showDataSets[0]} onChange={this.handleChange.bind(this)} />
                     <h3>Compare to other data</h3>
                     <CustomSelect options={dictionary.comparisons} stateKey="showComparisons" onChange={this.handleChange.bind(this)} />
