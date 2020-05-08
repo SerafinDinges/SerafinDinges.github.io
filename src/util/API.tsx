@@ -38,7 +38,7 @@ class API {
                             let lineDate = new Date(line.date);
                             let lineDateKey = `${lineDate.getFullYear()}-${lineDate.getMonth() + 1}-${lineDate.getDate()}`
                             if (!totalCases[lineDateKey]) {
-                                totalCases[lineDateKey] = { date: lineDateKey };
+                                totalCases[lineDateKey] = { date: lineDateKey, dateObject: lineDate };
                             }
                             totalCases[lineDateKey].weekday = lineDate.getDay();
                             totalCases[lineDateKey][line.iso_code + "_total_cases"] = line.total_cases / 1000; // -> total cases in magnitudes of 1000

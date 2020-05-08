@@ -30,8 +30,8 @@ class DataProvider {
     reduceDataSetToInterval(arr, intervalStartDay, intervalDuration) {
         console.log("transform to weekly", arr.slice());
         for (let index = 0; index < arr.length; index++) { // delete data until first incrementation
-            if (moment(arr[index].date).dayOfYear() === (intervalStartDay - intervalDuration + 1)) { // start at the beginning of first duration of interval
-                console.log(moment(arr[index].date).dayOfYear(), intervalStartDay, intervalDuration);
+            if (moment(arr[index].dateObject).dayOfYear() === (intervalStartDay - intervalDuration + 1)) { // start at the beginning of first duration of interval
+                console.log(moment(arr[index].dateObject).dayOfYear(), intervalStartDay, intervalDuration);
                 arr.splice(0, index);
                 break;
             }
@@ -69,7 +69,7 @@ class DataProvider {
             let date = moment(element.date);
             let dataIndex: number = -1;
             baseData.forEach((value, index) => {
-                if (moment(value.date).dayOfYear() === date.dayOfYear()) {
+                if (moment(value.dateObject).dayOfYear() === date.dayOfYear()) {
                     dataIndex = index;
                     return;
                 }
