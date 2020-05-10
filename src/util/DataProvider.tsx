@@ -27,6 +27,45 @@ class DataProvider {
         wrapper.labels.comparisons = [];
         return wrapper;
     }
+    addObjects(one, two) {
+        Object.keys(one).forEach(key => {
+            if (key.includes("new")) {
+                one[key] = parseInt(one[key]) + parseInt(two[key]);
+            }
+        });
+        return one;
+    }
+    getAverage(arr, range: number) {
+        let newArr = [];
+        for (let index = 0; index < arr.length; index++) {
+            let accumulator = false;
+
+            let counter = 0;
+            let avgIndex = index - range;
+            while (avgIndex <= index + range) {
+                if (arr[avgIndex]) {
+                    counter++;
+                    if (accumulator) {
+                        accumulator = this.addObjects(accumulator, arr[avgIndex]);
+                    }
+                    else {
+                        accumulator = Object.assign({}, arr[avgIndex]);
+                    }
+                }
+                avgIndex++;
+            }
+            let helper = arr[index];
+            console.log(helper, accumulator, counter);
+            Object.keys(helper).forEach(key => {
+                if (key.includes("new")) {
+                    helper[key] = parseInt(accumulator[key]) / counter;
+                }
+            });
+            newArr.push(helper);
+        }
+
+        return newArr;
+    }
     reduceDataSetToInterval(arr, intervalStartDay, intervalDuration) {
         console.log("transform to weekly", arr.slice());
         for (let index = 0; index < arr.length; index++) { // delete data until first incrementation

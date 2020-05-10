@@ -51,6 +51,7 @@ class Main extends React.Component<MyProps, MyState> {
                     });
                 }
                 else {
+                    wrapper.data = this.DataProvider.getAverage(wrapper.data, 1);
                     this.setState({
                         customData: wrapper
                     })
@@ -85,9 +86,11 @@ class Main extends React.Component<MyProps, MyState> {
                     </h3>
 
                     <CustomSelect options={dictionary.dataSets} stateKey="showDataSets" value={this.state.showDataSets[0]} onChange={this.handleChange.bind(this)} />
+                    <p className="footnote">*uses a three day average to compensate fluctuation in reporting</p>
+
                     <h3>Compare to other data</h3>
                     <CustomSelect options={dictionary.comparisons} stateKey="showComparisons" onChange={this.handleChange.bind(this)} />
-                    <p className="footnote">*refers to all types of respiratory deaths, see <a href="https://en.wikipedia.org/wiki/ICD-10_Chapter_X:_Diseases_of_the_respiratory_system">ICD-10 J00-J99</a></p>
+                    <p className="footnote">†refers to all types of respiratory deaths, see <a href="https://en.wikipedia.org/wiki/ICD-10_Chapter_X:_Diseases_of_the_respiratory_system">ICD-10 J00-J99</a></p>
                 </div>
                 <Graph dataWrapper={this.state.customData} type="LineChart" />
             </div>
