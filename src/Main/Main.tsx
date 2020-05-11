@@ -51,7 +51,7 @@ class Main extends React.Component<MyProps, MyState> {
                     });
                 }
                 else {
-                    wrapper.data = this.DataProvider.getAverage(wrapper.data, 1);
+                    wrapper.data = this.DataProvider.getAverage(wrapper.data, 2);
                     this.setState({
                         customData: wrapper
                     })
@@ -86,7 +86,7 @@ class Main extends React.Component<MyProps, MyState> {
                     </h3>
 
                     <CustomSelect options={dictionary.dataSets} stateKey="showDataSets" value={this.state.showDataSets[0]} onChange={this.handleChange.bind(this)} />
-                    <p className="footnote">*uses a three day average to compensate fluctuation in reporting</p>
+                    <p className="footnote">*uses a three day average to better represent the overall trend</p>
 
                     <h3>Compare to other data</h3>
                     <CustomSelect options={dictionary.comparisons} stateKey="showComparisons" onChange={this.handleChange.bind(this)} />
