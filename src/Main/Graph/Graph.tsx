@@ -88,7 +88,7 @@ class Graph extends React.Component<MyProps, MyState> {
                     data={this.props.dataWrapper.data}>
                     <CartesianGrid strokeDasharray="5 5" stroke="#eee" />
                     <XAxis dataKey={this.props.dataWrapper.labels.xAxis} />
-                    <YAxis />
+                    <YAxis type="number" domain={[0, "auto"]} />
                     <Tooltip formatter={this.getToolTip} />
                     <Legend formatter={getMetaKey} />
                     {this.props.dataWrapper.labels.comparisons ? this.props.dataWrapper.labels.comparisons.map((key) => {

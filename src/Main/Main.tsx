@@ -51,7 +51,7 @@ class Main extends React.Component<MyProps, MyState> {
                     });
                 }
                 else {
-                    wrapper.data = this.DataProvider.getAverage(wrapper.data, 2);
+                    wrapper.data = this.DataProvider.getAverage(wrapper.data, 1);
                     this.setState({
                         customData: wrapper
                     })

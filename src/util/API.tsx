@@ -41,14 +41,14 @@ class API {
                                 totalCases[lineDateKey] = { date: lineDateKey, dateObject: lineDate };
                             }
                             totalCases[lineDateKey].weekday = lineDate.getDay();
-                            totalCases[lineDateKey][line.iso_code + "_total_cases"] = line.total_cases / 1000; // -> total cases in magnitudes of 1000
+                            totalCases[lineDateKey][line.iso_code + "_total_cases"] = line.total_cases / 1; // -> total cases in magnitudes of 1000
                             totalCases[lineDateKey][line.iso_code + "_total_deaths"] = (line.total_deaths / 1); // -> total deaths in magnitudes of 1
                             totalCases[lineDateKey][line.iso_code + "_new_deaths"] = (line.new_deaths / 1); // -> total deaths in magnitudes of 1
                             totalCases[lineDateKey][line.iso_code + "_new_cases"] = (line.new_cases / 1); // -> total deaths in magnitudes of 1
-                            totalCases[lineDateKey][line.iso_code + "_total_cases_per_million"] = (line.total_cases_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
-                            totalCases[lineDateKey][line.iso_code + "_new_cases_per_million"] = (line.new_cases_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
-                            totalCases[lineDateKey][line.iso_code + "_total_deaths_per_million"] = (line.total_deaths_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
-                            totalCases[lineDateKey][line.iso_code + "_new_deaths_per_million"] = (line.new_deaths_per_million / 1).toFixed(); // -> total deaths in magnitudes of 100
+                            totalCases[lineDateKey][line.iso_code + "_total_cases_per_million"] = parseFloat(line.total_cases_per_million) // -> total deaths in magnitudes of 1
+                            totalCases[lineDateKey][line.iso_code + "_new_cases_per_million"] = parseFloat(line.new_cases_per_million) // -> total deaths in magnitudes of 1
+                            totalCases[lineDateKey][line.iso_code + "_total_deaths_per_million"] = parseFloat(line.total_deaths_per_million) // -> total deaths in magnitudes of 1
+                            totalCases[lineDateKey][line.iso_code + "_new_deaths_per_million"] = parseFloat(line.new_deaths_per_million) // -> total deaths in magnitudes of 1
                             totalCases[lineDateKey].prettyDate = `${lineDate.getMonth() + 1}-${lineDate.getDate()}`;
                         }
                     });

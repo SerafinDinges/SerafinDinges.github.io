@@ -55,7 +55,6 @@ class DataProvider {
                 avgIndex++;
             }
             let helper = arr[index];
-            console.log(helper, accumulator, counter);
             Object.keys(helper).forEach(key => {
                 if (key.includes("new")) {
                     helper[key] = parseInt(accumulator[key]) / counter;
