@@ -42,7 +42,7 @@ class DataProvider {
 
             let counter = 0;
             let avgIndex = index - range;
-            while (avgIndex <= index + range) {
+            while (avgIndex <= index) {
                 if (arr[avgIndex]) {
                     counter++;
                     if (accumulator) {
